@@ -21,12 +21,13 @@ class AVL {
 private:
 
     Nodo < T >* raiz;
+    int altura, nElmentos;
 
     void recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po );
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
-    bool insertaDato( Nodo<T>*& p, const T& dato );
+    bool insertaDato( Nodo<T>*& p, const T& dato, int& h );
 
 
 
@@ -41,11 +42,11 @@ public:
 
 //Constructor por defecto
 template < typename T >
-AVL < T >::AVL () : raiz ( 0 ) {}
+AVL < T >::AVL () : raiz ( 0 ), altura ( 0 ), nElmentos ( 0 ) {}
 
 //Constructor copia
 template < typename T >
-AVL < T >::AVL ( const AVL<T>& orig ) {
+AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
 
     this->recorreYCopia( this->raiz, orig.raiz );
 }
@@ -117,38 +118,51 @@ void AVL < T >::rotIzq ( Nodo < T >*& p){
 
 
 template  < typename T >
-bool AVL < T >::insertar( const T& dato ) { return this->insertaDato( this->raiz, dato ); }
+bool AVL < T >::insertar( const T& dato ) {
+
+    int h = 0;
+    if ( this->insertaDato ( this->raiz, dato, h ) ) {
+
+        if ( this->altura < h )
+            this->altura = h;
+        ++this->nElmentos;
+        return true;
+    }
+
+    return false;
+}
 
 template < typename T >
-bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato ) {
+bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int &h ) {
 
     bool sol = false;
 
-    Nodo<T> *p = o;
+    Nodo < T > *p = o;
 
-    if (!p){
-        p = new Nodo<T>(dato);
+    if ( !p ){
+        p = new Nodo < T > ( dato );
         o = p; sol=1;
-    }else if (dato > p->dato){
-        if (insertaDato(p->der, dato)){
+    }else if ( dato > p->dato ){
+        if (insertaDato( p->der, dato, h ) ){
             p->bal--;
-            if (p->bal == -1) sol = true;
-            else if (p->bal == -2) {
-                if (p->der->bal == 1) rotDer(p->der);
-                rotIzq(o);
+            if ( p->bal == -1 ) sol = true;
+            else if ( p->bal == -2 ) {
+                if ( p->der->bal == 1) rotDer ( p->der );
+                rotIzq ( o );
             }
         }
     }
-    else if (dato < p->dato){
-        if (insertaDato(p->izq, dato)){
+    else if ( dato < p->dato ){
+        if ( insertaDato ( p->izq, dato, h ) ){
             p->bal++;
-            if (p->bal==1) sol = true;
-            else if (p->bal == 2){
-                if (p->izq->bal == -1) rotIzq(p->izq);
-                rotDer(o);
+            if ( p->bal == 1 ) sol = true;
+            else if ( p->bal == 2 ){
+                if ( p->izq->bal == -1) rotIzq ( p->izq );
+                rotDer ( o );
             }
         }
     }
+    ++h;
     return sol;
 }
 
