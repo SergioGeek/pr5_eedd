@@ -28,6 +28,7 @@ private:
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
     bool insertaDato( Nodo<T>*& p, const T& dato, int& h );
+    bool busca ( T& dato );
 
 
 
@@ -164,6 +165,23 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int &h ) {
     }
     ++h;
     return sol;
+}
+
+template < typename T >
+bool AVL < T >::busca ( T& dato ) {
+
+    Nodo < T >* p = this->raiz;
+
+    while ( p ) {
+        if ( dato == p->dato)
+            return true;
+        if ( dato < p->dato )
+            p = p->izq;
+        else
+            p = p->der;
+    }
+
+    return false;
 }
 
 
