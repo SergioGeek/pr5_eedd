@@ -24,6 +24,8 @@ private:
 
     void recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po );
     void limpiaAVL ( Nodo < T >*& r );
+    void rotDer ( Nodo < T >*& p );
+    void rotIzq ( Nodo < T >*& p );
 
 
 public:
@@ -83,5 +85,31 @@ void AVL < T >::limpiaAVL ( Nodo < T >*& r ) {
     }
 }
 
+
+template<typename T>
+void AVL < T >::rotDer (Nodo < T >*& p){
+    Nodo<T> *q = p, *l;
+    p = l = q->izq;
+    q->izq = l->der;
+    l->der = q;
+    q->bal--;
+    if (l->bal > 0)
+        q->bal -= l->bal;
+    l->bal--;
+    if(q->bal < 0)
+        l->bal -= -q->bal;
+}
+
+template<typename T>
+void AVL < T >::rotIzq ( Nodo < T >*& p){
+    Nodo<T> *q = p, *r;
+    p = r = q->der;
+    q->der = r->izq;
+    r->izq = q;
+    q->bal++;
+    if (r->bal < 0) q->bal += -r->bal;
+    r->bal++;
+    if(q->bal > 0) r->bal += q->bal;
+}
 
 #endif //PR5_EEDD_AVL_H
