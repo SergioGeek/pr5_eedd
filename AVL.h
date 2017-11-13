@@ -26,6 +26,8 @@ private:
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
+    bool insertaDato( Nodo<T>*& p, const T& dato );
+
 
 
 public:
@@ -33,6 +35,7 @@ public:
     AVL ();
     AVL ( const AVL < T >& orig );
     AVL < T >& operator = (const AVL < T >& orig );
+    bool insertar ( const T& dato );
 };
 
 
@@ -86,7 +89,7 @@ void AVL < T >::limpiaAVL ( Nodo < T >*& r ) {
 }
 
 
-template<typename T>
+template < typename T >
 void AVL < T >::rotDer (Nodo < T >*& p){
     Nodo<T> *q = p, *l;
     p = l = q->izq;
@@ -100,7 +103,7 @@ void AVL < T >::rotDer (Nodo < T >*& p){
         l->bal -= -q->bal;
 }
 
-template<typename T>
+template < typename T >
 void AVL < T >::rotIzq ( Nodo < T >*& p){
     Nodo<T> *q = p, *r;
     p = r = q->der;
@@ -111,5 +114,43 @@ void AVL < T >::rotIzq ( Nodo < T >*& p){
     r->bal++;
     if(q->bal > 0) r->bal += q->bal;
 }
+
+
+template  < typename T >
+bool AVL < T >::insertar( const T& dato ) { return this->insertaDato( this->raiz, dato ); }
+
+template < typename T >
+bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato ) {
+
+    bool sol = false;
+
+    Nodo<T> *p = o;
+
+    if (!p){
+        p = new Nodo<T>(dato);
+        o = p; sol=1;
+    }else if (dato > p->dato){
+        if (insertaDato(p->der, dato)){
+            p->bal--;
+            if (p->bal == -1) sol = true;
+            else if (p->bal == -2) {
+                if (p->der->bal == 1) rotDer(p->der);
+                rotIzq(o);
+            }
+        }
+    }
+    else if (dato < p->dato){
+        if (insertaDato(p->izq, dato)){
+            p->bal++;
+            if (p->bal==1) sol = true;
+            else if (p->bal == 2){
+                if (p->izq->bal == -1) rotIzq(p->izq);
+                rotDer(o);
+            }
+        }
+    }
+    return sol;
+}
+
 
 #endif //PR5_EEDD_AVL_H
