@@ -1,4 +1,5 @@
 
+#include <queue>
 #include "Palabra.h"
 
 Palabra::Palabra () : termino ( "" ), siguientes () {}
@@ -24,6 +25,14 @@ bool Palabra::operator < ( const Palabra &orig ) {
     return false;
 }
 
+bool Palabra::operator > ( const Palabra &orig ) {
+
+    if ( this->termino > orig.termino )
+        return true;
+
+    return false;
+}
+
 std::string Palabra::getPalabra () {
     return this->termino;
 }
@@ -31,36 +40,43 @@ std::string Palabra::getPalabra () {
 void Palabra::nuevoSucesor( const std::string& termino ) {
 
     bool encontrado = false;
-    ListaEnlazada < Sucesor >::Iterador it = this->siguientes.iterador();
+    std::list < Sucesor >::iterator it = siguientes.begin();
 
-    while ( !it.fin() && !encontrado  ) {
+    while ( it != siguientes.end() ) {
 
-        if ( it.dato().getTermino() == termino ) {
+        if ( (*it).getTermino() == termino ) {
 
-            it.dato().incrementar();
+            (*it).incrementar();
             encontrado = true;
         }
 
-        it.siguiente();
+        ++it;
     }
 
     if ( !encontrado ) {
         Sucesor s ( termino );
-        this->siguientes.insertarFin ( s );
+        this->siguientes.push_back ( s );
     }
 }
 
-ListaEnlazada < std::string > Palabra::sucesores() {
+std::list < std::string > Palabra::sucesores() {
 
-    ListaEnlazada < std::string > lstr;
+    std::priority_queue < Sucesor > pqs;
+    std::list<Sucesor>::iterator it(siguientes.begin());
+    std::list<std::string> lstr;
+    while ( it != siguientes.end() ){
 
-    ListaEnlazada < Sucesor >::Iterador it = this->siguientes.iterador();
-
-    while ( !it.fin() ){
-        lstr.insertarFin( it.dato().getTermino() );
-        it.siguiente();
+        pqs.push(*it);
+        it++;
     }
+    int cont = 0;
 
+    while ( !pqs.empty() && cont < 10 ){
+
+        lstr.push_back( pqs.top().getTermino());
+        pqs.pop();
+        cont++;
+    }
     return lstr;
 }
 

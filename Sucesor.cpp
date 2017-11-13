@@ -8,4 +8,8 @@ Sucesor::Sucesor ( const std::string& term ) : termino ( term ), numOcurrencias 
 
 const std::string& Sucesor::getTermino () const { return this->termino; }
 
+bool Sucesor::operator < ( const Sucesor& orig ) const{
+    return numOcurrencias < orig.numOcurrencias;
+}
+
 void Sucesor::incrementar() { ++this->numOcurrencias; }

@@ -19,6 +19,8 @@ public:
 
     const std::string& getTermino () const;
 
+    bool operator < ( const Sucesor& orig ) const;
+
     void incrementar ();
 
 };

@@ -12,7 +12,7 @@ public:
     T dato;
 
     Nodo(const T &ele): izq(0), der(0), bal(0), dato(ele){}
-    //Nodo(const Nodo<T> *orig): izq(0), der(0), bal(orig->bal), dato(orig->dato){}
+    Nodo(const Nodo<T> *orig): izq(0), der(0), bal(orig->bal), dato(orig->dato){}
 };
 
 template < typename T >
@@ -23,11 +23,11 @@ private:
     Nodo < T >* raiz;
     int altura, nElmentos;
 
-    void recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po );
+    void recorreYCopia ( Nodo < T >* &pn, Nodo < T >* &po );
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
-    bool insertaDato( Nodo<T>*& p, const T& dato, int& h, bool& sol );
+    bool insertaDato( Nodo<T>*& p, T& dato, int& h, bool& sol, T*& r );
 
 
 
@@ -35,9 +35,9 @@ public:
 
     AVL ();
     AVL ( const AVL < T >& orig );
-    AVL < T >& operator = (const AVL < T >& orig );
-    bool insertar ( const T& dato );
-    bool busca ( const T& dato, T*& r );
+    AVL < T >& operator = ( AVL < T >& orig );
+    bool insertar ( T& dato, T*& r );
+    T* busca ( T& dato );
 };
 
 
@@ -45,15 +45,17 @@ public:
 template < typename T >
 AVL < T >::AVL () : raiz ( 0 ), altura ( 0 ), nElmentos ( 0 ) {}
 
+/*
 //Constructor copia
-//template < typename T >
-//AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
+template < typename T >
+AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
 
-  //  recorreYCopia( raiz, orig.raiz );
-//}
+    recorreYCopia( raiz, orig.raiz );
+}
+ */
 
 template < typename T >
-void AVL < T >::recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po ) {
+void AVL < T >::recorreYCopia ( Nodo < T >* &pn, Nodo < T >* &po ) {
 
     if ( po ) {
 
@@ -68,7 +70,7 @@ void AVL < T >::recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po ) {
 }
 
 template  < typename T >
-AVL < T >& AVL < T >::operator = ( const AVL < T > &orig ) {
+AVL < T >& AVL < T >::operator = ( AVL < T > &orig ) {
     //preguntar si son iguales que pasa
     if ( this->raiz )
         this->limpiaAVL( this->raiz );
@@ -119,11 +121,11 @@ void AVL < T >::rotIzq ( Nodo < T >*& p){
 
 
 template  < typename T >
-bool AVL < T >::insertar( const T& dato ) {
+bool AVL < T >::insertar(  T& dato, T*& r) {
 
     bool sol = false;
     int h = 0;
-    if ( this->insertaDato ( this->raiz, dato, h, sol ) ) {
+    if ( this->insertaDato ( this->raiz, dato, h, sol, r ) ) {
 
         if ( this->altura < h )
             this->altura = h;
@@ -135,15 +137,18 @@ bool AVL < T >::insertar( const T& dato ) {
 }
 
 template < typename T >
-bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int& h, bool& sol ) {
+bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r ) {
 
     Nodo < T > *p = o;
 
     if ( !p ){
+
         p = new Nodo < T > ( dato );
+        r = &p->dato;
         o = p; sol=1;
+
     }else if ( dato > p->dato ){
-        if (insertaDato( p->der, dato, h, sol ) ){
+        if (insertaDato( p->der, dato, h, sol, r ) ){
             p->bal--;
             if ( p->bal == -1 ) sol = true;
             else if ( p->bal == -2 ) {
@@ -155,7 +160,7 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int& h, bool& sol ) 
         }
     }
     else if ( dato < p->dato ){
-        if ( insertaDato ( p->izq, dato, h, sol ) ){
+        if ( insertaDato ( p->izq, dato, h, sol, r ) ){
             p->bal++;
             if ( p->bal == 1 ) sol = true;
             else if ( p->bal == 2 ){
@@ -171,22 +176,21 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int& h, bool& sol ) 
 }
 
 template < typename T >
-bool AVL < T >::busca ( const T& dato , T*& r ) {
+T* AVL < T >::busca ( T& dato  ) {
 
     Nodo < T >* p = this->raiz;
 
     while ( p ) {
         if ( dato == p->dato) {
-            r = &p->dato;
-            return true;
+            return &p->dato;
         }
         if ( dato < p->dato )
             p = p->izq;
         else
             p = p->der;
     }
-    r = 0;
-    return false;
+    T* nulo = 0;
+    return nulo;
 }
 
 

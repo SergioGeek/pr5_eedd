@@ -3,12 +3,17 @@
 #include <sstream>
 #include "Diccionario.h"
 
-Diccionario::Diccionario( std::string ruta ): hojas( this->espacio ) {
+
+
+Diccionario::Diccionario() {}
+
+Diccionario::Diccionario( std::string ruta ) {
 
 
     std::ifstream fe;
     std::string linea;
 
+    Palabra* pp = 0;
 
     fe.open( ruta );
 
@@ -21,10 +26,9 @@ Diccionario::Diccionario( std::string ruta ): hojas( this->espacio ) {
             if ( linea != "") {
 
                 Palabra p ( linea );
-                this->hojas.insertar( p );
+                this->hojas.insertar( p, pp );
             }
         }
-        this->hojas.ordenar();
 
         fe.close();
 
@@ -36,14 +40,14 @@ Diccionario::Diccionario( std::string ruta ): hojas( this->espacio ) {
 }
 
 
-Diccionario::Diccionario(const Diccionario &orig) : hojas ( orig.hojas ) {}
+//Diccionario::Diccionario(const Diccionario &orig) : hojas ( orig.hojas ) {}
 
 
 //BUSCA
-long int Diccionario::busca ( const std::string &termino ) {
+Palabra* Diccionario::busca ( const std::string &termino ) {
 
     Palabra p(termino);
-    return this->hojas.busquedaBin ( p );
+    return this->hojas.busca ( p );
 
 }
 
@@ -54,41 +58,33 @@ void Diccionario::insertar(std::string &termino) {
 
 
     Palabra p ( termino );
-
-
-    if ( this->hojas.busquedaBin ( p ) == -1 ) {
-        this->hojas.insertar( p );
-
-        if ( p < this->hojas [ this->hojas.tam() - 2] )
-        this->hojas.ordenar ();
-    }
-
+    Palabra* pp = 0;
+    this->hojas.insertar( p, pp );
 }
 
-
+/*
 void Diccionario::entrena ( const std::string& frase ) {
 
-    std::string palabra, predecesor = "";
+    std::string palabra = "", predecesor = "";
     std::stringstream ss;
-    long int pos = 0;
+    Palabra* pos = 0;
     ss << frase;	//enviamos la cadena al stream
     while (!ss.eof()) {
         ss >> palabra;	//leemos la siguiente palabra
         if (palabra!="") {
 
-            pos = this->busca( palabra );
-            if (  pos == -1 ) {
-                this->insertar(palabra);
-                pos = this->busca(palabra);
-            }
+            Palabra termino ( palabra );
+            this->hojas.insertar( palabra, pos );
+
             if ( predecesor != "") {
-                this->hojas[pos].nuevoSucesor( predecesor );
+                pos->nuevoSucesor( predecesor );
             }
         }
         predecesor = palabra;
     }
 
 }
+ */
 
 void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
 
@@ -105,7 +101,7 @@ void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
 
             if ( linea != "") {
 
-                this->entrena( linea );
+                //this->entrena( linea );
             }
         }
 
@@ -120,11 +116,11 @@ void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
 
 }
 
-ListaEnlazada < std::string > Diccionario::sacaSucesoresDe(const std::string &p) {
+std::list < std::string > Diccionario::sacaSucesoresDe(const std::string &p) {
 
-    auto pos = this->busca( p );
+    Palabra termino ( p );
 
-    return this->hojas [pos].sucesores();
+    return this->hojas.busca( termino )->sucesores();
 }
 
 Diccionario::~Diccionario() {}

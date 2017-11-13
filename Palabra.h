@@ -5,6 +5,7 @@
 #include <string>
 #include "ListaEnlazada.h"
 #include "Sucesor.h"
+#include <list>
 
 
 class Palabra {
@@ -13,7 +14,7 @@ private:
 
     std::string termino;
 
-    ListaEnlazada < Sucesor > siguientes;
+    std::list < Sucesor > siguientes;
 
 
 public:
@@ -25,11 +26,12 @@ public:
 
     bool operator == ( const Palabra &orig );
     bool operator < ( const Palabra &orig );
+    bool operator > ( const Palabra &orig );
 
 
     std::string getPalabra();
     void nuevoSucesor ( const std::string& termino );
-    ListaEnlazada < std::string > sucesores();
+    std::list < std::string > sucesores();
 
     virtual ~Palabra();
 
