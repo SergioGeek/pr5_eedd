@@ -12,7 +12,7 @@ public:
     T dato;
 
     Nodo(const T &ele): izq(0), der(0), bal(0), dato(ele){}
-    Nodo(const Nodo<T> *orig): izq(0), der(0), bal(orig->bal), dato(orig->dato){}
+    //Nodo(const Nodo<T> *orig): izq(0), der(0), bal(orig->bal), dato(orig->dato){}
 };
 
 template < typename T >
@@ -27,8 +27,7 @@ private:
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
-    bool insertaDato( Nodo<T>*& p, const T& dato, int& h );
-    bool busca ( T& dato );
+    bool insertaDato( Nodo<T>*& p, const T& dato, int& h, bool& sol );
 
 
 
@@ -38,6 +37,7 @@ public:
     AVL ( const AVL < T >& orig );
     AVL < T >& operator = (const AVL < T >& orig );
     bool insertar ( const T& dato );
+    bool busca ( const T& dato, T*& r );
 };
 
 
@@ -46,11 +46,11 @@ template < typename T >
 AVL < T >::AVL () : raiz ( 0 ), altura ( 0 ), nElmentos ( 0 ) {}
 
 //Constructor copia
-template < typename T >
-AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
+//template < typename T >
+//AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
 
-    this->recorreYCopia( this->raiz, orig.raiz );
-}
+  //  recorreYCopia( raiz, orig.raiz );
+//}
 
 template < typename T >
 void AVL < T >::recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po ) {
@@ -121,8 +121,9 @@ void AVL < T >::rotIzq ( Nodo < T >*& p){
 template  < typename T >
 bool AVL < T >::insertar( const T& dato ) {
 
+    bool sol = false;
     int h = 0;
-    if ( this->insertaDato ( this->raiz, dato, h ) ) {
+    if ( this->insertaDato ( this->raiz, dato, h, sol ) ) {
 
         if ( this->altura < h )
             this->altura = h;
@@ -134,9 +135,7 @@ bool AVL < T >::insertar( const T& dato ) {
 }
 
 template < typename T >
-bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int &h ) {
-
-    bool sol = false;
+bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int& h, bool& sol ) {
 
     Nodo < T > *p = o;
 
@@ -144,21 +143,25 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int &h ) {
         p = new Nodo < T > ( dato );
         o = p; sol=1;
     }else if ( dato > p->dato ){
-        if (insertaDato( p->der, dato, h ) ){
+        if (insertaDato( p->der, dato, h, sol ) ){
             p->bal--;
             if ( p->bal == -1 ) sol = true;
             else if ( p->bal == -2 ) {
-                if ( p->der->bal == 1) rotDer ( p->der );
+                --h;
+                if ( p->der->bal == 1)
+                    rotDer ( p->der );
                 rotIzq ( o );
             }
         }
     }
     else if ( dato < p->dato ){
-        if ( insertaDato ( p->izq, dato, h ) ){
+        if ( insertaDato ( p->izq, dato, h, sol ) ){
             p->bal++;
             if ( p->bal == 1 ) sol = true;
             else if ( p->bal == 2 ){
-                if ( p->izq->bal == -1) rotIzq ( p->izq );
+                --h;
+                if ( p->izq->bal == -1)
+                    rotIzq ( p->izq );
                 rotDer ( o );
             }
         }
@@ -168,19 +171,21 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, const T& dato, int &h ) {
 }
 
 template < typename T >
-bool AVL < T >::busca ( T& dato ) {
+bool AVL < T >::busca ( const T& dato , T*& r ) {
 
     Nodo < T >* p = this->raiz;
 
     while ( p ) {
-        if ( dato == p->dato)
+        if ( dato == p->dato) {
+            r = &p->dato;
             return true;
+        }
         if ( dato < p->dato )
             p = p->izq;
         else
             p = p->der;
     }
-
+    r = 0;
     return false;
 }
 
