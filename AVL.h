@@ -23,12 +23,14 @@ private:
     Nodo < T >* raiz;
 
     void recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po );
+    void limpiaAVL ( Nodo < T >*& r );
 
 
 public:
 
     AVL ();
-    AVL ( const AVL < T >& orig);
+    AVL ( const AVL < T >& orig );
+    AVL < T >& operator = (const AVL < T >& orig );
 };
 
 
@@ -56,6 +58,29 @@ void AVL < T >::recorreYCopia ( Nodo < T >*& pn, Nodo < T >*& po ) {
     } else
 
         pn = 0;
+}
+
+template  < typename T >
+AVL < T >& AVL < T >::operator = ( const AVL < T > &orig ) {
+    //preguntar si son iguales que pasa
+    if ( this->raiz )
+        this->limpiaAVL( this->raiz );
+
+    this->recorreYCopia( this->raiz, orig.raiz );
+
+    return *this;
+}
+
+template  < typename T >
+void AVL < T >::limpiaAVL ( Nodo < T >*& r ) {
+
+    if ( r ) {
+
+        limpiaAVL( r->izq );
+        limpiaAVL( r->der );
+        delete r;
+        r = 0;
+    }
 }
 
 
