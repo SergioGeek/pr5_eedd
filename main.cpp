@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Palabra.h"
 #include "Diccionario.h"
+#include "TextoPredictivo.h"
 
 int main() {
 
@@ -33,18 +34,36 @@ int main() {
     arbol.muestraAVL();
     std::cout << " ============================ " << std::endl;
 
+    std::cout << arbol.alturaH() << std::endl;
+
+    std::cout << arbol.numElementos() << std::endl;
 
 
 
+    //Segundo programa de prueba
 
 
 
+    Diccionario d ( "/home/anonymous/Documents/eedd_practice/pr5_eedd/listado-sin-acentos_v2.txt" );
 
-    //Diccionario d ( "/home/anonymous/Documents/eedd_practice/pr5_eedd/listado-sin-acentos_v2.txt" );
+
+    d.usacorpus( "/home/anonymous/Documents/eedd_practice/pr5_eedd/corpus_spanish.txt" );
 
 
-    //d.usacorpus( "/home/anonymous/Documents/eedd_practice/pr5_eedd/corpus_spanish.txt" );
+    TextoPredictivo tp ( d );
 
+    std::string frase = "escriba su frase";
+
+    tp.entrena( frase );
+
+    std::string termino = "palabra";
+
+    auto lista = tp.sugerencia( termino );
+
+    std::list < std::string >::iterator it = lista.begin();
+
+    for ( int i = 0; i < 3; ++i )
+        std::cout << *it << std::endl;
 
 
 

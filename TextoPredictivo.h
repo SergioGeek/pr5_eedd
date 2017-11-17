@@ -10,12 +10,12 @@ class TextoPredictivo {
 
 private:
 
-    Diccionario* dic;
+    Diccionario dic;
 
 public:
 
-    TextoPredictivo( Diccionario *diccIdioma );
-    TextoPredictivo( const TextoPredictivo& orig);
+    TextoPredictivo( Diccionario diccIdioma );
+    TextoPredictivo(  TextoPredictivo& orig);
 
     std::list<std::string> sugerencia(std::string &termino);
     void entrena ( std::string& frase );
