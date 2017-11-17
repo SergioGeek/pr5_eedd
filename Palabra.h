@@ -29,6 +29,7 @@ public:
     bool operator > ( const Palabra &orig );
 
 
+
     std::string getPalabra();
     void nuevoSucesor ( const std::string& termino );
     std::list < std::string > sucesores();
@@ -37,4 +38,9 @@ public:
 
 };
 
+std::ostream& operator<<(std::ostream& os, Palabra& obj);
+
 #endif //PR1_PALABRA_H
+
+
+

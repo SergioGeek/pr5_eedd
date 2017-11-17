@@ -27,6 +27,8 @@ Diccionario::Diccionario( std::string ruta ) {
 
                 Palabra p ( linea );
                 this->hojas.insertar( p, pp );
+                //std::cout << *pp << std::endl;
+                //std::cout << "Nueva palabra" << std::endl;
             }
         }
 
@@ -40,7 +42,7 @@ Diccionario::Diccionario( std::string ruta ) {
 }
 
 
-//Diccionario::Diccionario(const Diccionario &orig) : hojas ( orig.hojas ) {}
+Diccionario::Diccionario( Diccionario &orig) : hojas ( orig.hojas ) {}
 
 
 //BUSCA
@@ -62,7 +64,7 @@ void Diccionario::insertar(std::string &termino) {
     this->hojas.insertar( p, pp );
 }
 
-/*
+
 void Diccionario::entrena ( const std::string& frase ) {
 
     std::string palabra = "", predecesor = "";
@@ -74,17 +76,18 @@ void Diccionario::entrena ( const std::string& frase ) {
         if (palabra!="") {
 
             Palabra termino ( palabra );
-            this->hojas.insertar( palabra, pos );
+            this->hojas.insertar( termino, pos );
 
             if ( predecesor != "") {
                 pos->nuevoSucesor( predecesor );
             }
         }
+
         predecesor = palabra;
     }
 
 }
- */
+
 
 void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
 
@@ -101,7 +104,7 @@ void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
 
             if ( linea != "") {
 
-                //this->entrena( linea );
+                this->entrena( linea );
             }
         }
 
@@ -112,7 +115,7 @@ void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
         throw std::string ( "El archivo no se ha podido abrir correctamente" );
 
     }
-    std::cout << "Fin de corpus" <<std::endl;
+    //std::cout << "Fin de corpus" <<std::endl;
 
 }
 
@@ -121,6 +124,10 @@ std::list < std::string > Diccionario::sacaSucesoresDe(const std::string &p) {
     Palabra termino ( p );
 
     return this->hojas.busca( termino )->sucesores();
+}
+
+void Diccionario::muestra() {
+    this->hojas.muestraAVL();
 }
 
 Diccionario::~Diccionario() {}

@@ -25,14 +25,16 @@ public:
     //Constructores
     Diccionario();
     Diccionario ( std::string ruta );
-    //Diccionario ( const Diccionario& orig );
+    Diccionario ( Diccionario& orig );
 
     //Operaciones
     Palabra* busca ( const std::string &termino );
     void insertar ( std::string &termino );
-    //void entrena ( const std::string& frase );
+    void entrena ( const std::string& frase );
     void usacorpus ( const std::string& nom_fich_corpus );
     std::list < std::string > sacaSucesoresDe ( const std::string& p );
+    void muestra ();
+
 
     //Destructor
     virtual ~Diccionario();

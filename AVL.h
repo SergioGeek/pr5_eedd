@@ -2,6 +2,8 @@
 #ifndef PR5_EEDD_AVL_H
 #define PR5_EEDD_AVL_H
 
+#include <iostream>
+
 template <typename T>
 class Nodo
 {
@@ -23,21 +25,27 @@ private:
     Nodo < T >* raiz;
     int altura, nElmentos;
 
-    void recorreYCopia ( Nodo < T >* &pn, Nodo < T >* &po );
+    void recorreYCopia ( Nodo < T >* &pn, Nodo < T >* po );
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
-    bool insertaDato( Nodo<T>*& p, T& dato, int& h, bool& sol, T*& r );
+    bool insertaDato( Nodo<T>*& o, T& dato, int& h, bool& sol, T*& r );
+    void inorden ( Nodo < T >* r );
 
 
 
 public:
 
     AVL ();
-    AVL ( const AVL < T >& orig );
-    AVL < T >& operator = ( AVL < T >& orig );
+    AVL (  AVL < T >& orig );
+    AVL < T >& operator = ( const AVL < T >& orig );
     bool insertar ( T& dato, T*& r );
     T* busca ( T& dato );
+    void muestraAVL ();
+    unsigned int numElementos() { return this->nElmentos; };
+    unsigned int alturaH() { return this->altura; };
+
+    virtual ~AVL();
 };
 
 
@@ -45,17 +53,17 @@ public:
 template < typename T >
 AVL < T >::AVL () : raiz ( 0 ), altura ( 0 ), nElmentos ( 0 ) {}
 
-/*
+
 //Constructor copia
 template < typename T >
-AVL < T >::AVL ( const AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( nElmentos ) {
+AVL < T >::AVL (  AVL<T>& orig ) : altura ( orig.altura ), nElmentos ( orig.nElmentos ) {
 
     recorreYCopia( raiz, orig.raiz );
 }
- */
+
 
 template < typename T >
-void AVL < T >::recorreYCopia ( Nodo < T >* &pn, Nodo < T >* &po ) {
+void AVL < T >::recorreYCopia ( Nodo < T >* &pn, Nodo < T >* po ) {
 
     if ( po ) {
 
@@ -70,12 +78,16 @@ void AVL < T >::recorreYCopia ( Nodo < T >* &pn, Nodo < T >* &po ) {
 }
 
 template  < typename T >
-AVL < T >& AVL < T >::operator = ( AVL < T > &orig ) {
+AVL < T >& AVL < T >::operator = ( const AVL < T > &orig ) {
+
     //preguntar si son iguales que pasa
     if ( this->raiz )
         this->limpiaAVL( this->raiz );
 
     this->recorreYCopia( this->raiz, orig.raiz );
+
+    this->nElmentos = orig.nElmentos;
+    this->altura = orig.altura;
 
     return *this;
 }
@@ -145,13 +157,13 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r )
 
         p = new Nodo < T > ( dato );
         r = &p->dato;
-        o = p; sol=1;
+        o = p; sol= true;
 
     }else if ( dato > p->dato ){
+        ++h;
         if (insertaDato( p->der, dato, h, sol, r ) ){
             p->bal--;
-            if ( p->bal == -1 ) sol = true;
-            else if ( p->bal == -2 ) {
+            if ( p->bal == -2 ) {
                 --h;
                 if ( p->der->bal == 1)
                     rotDer ( p->der );
@@ -160,17 +172,18 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r )
         }
     }
     else if ( dato < p->dato ){
+        ++h;
         if ( insertaDato ( p->izq, dato, h, sol, r ) ){
             p->bal++;
-            if ( p->bal == 1 ) sol = true;
-            else if ( p->bal == 2 ){
+            if ( p->bal == 2 ){
                 --h;
                 if ( p->izq->bal == -1)
                     rotIzq ( p->izq );
                 rotDer ( o );
             }
         }
-    }
+    } else if ( dato == p->dato)
+        r = &p->dato;
     ++h;
     return sol;
 }
@@ -193,5 +206,25 @@ T* AVL < T >::busca ( T& dato  ) {
     return nulo;
 }
 
+template < typename T >
+void AVL < T >::inorden ( Nodo<T>* r ) {
+
+    if (r) {
+
+        inorden(r->izq);
+
+        std::cout << r->dato << std::endl;
+
+        inorden(r->der);
+    }
+}
+
+template < typename T >
+void AVL < T >::muestraAVL () { if (this->raiz ) this->inorden( this->raiz ); }
+
+template < typename T >
+AVL < T >::~AVL() {
+    limpiaAVL( this->raiz );
+}
 
 #endif //PR5_EEDD_AVL_H

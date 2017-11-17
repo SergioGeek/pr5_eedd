@@ -80,5 +80,10 @@ std::list < std::string > Palabra::sucesores() {
     return lstr;
 }
 
+std::ostream& operator << ( std::ostream& os, Palabra& obj )
+{
+    os << obj.getPalabra();
+    return os;
+}
 
 Palabra::~Palabra() {}

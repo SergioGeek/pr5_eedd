@@ -18,7 +18,7 @@ public:
     TextoPredictivo( const TextoPredictivo& orig);
 
     std::list<std::string> sugerencia(std::string &termino);
-    void entrena(std::string &frase);
+    void entrena ( std::string& frase );
 
     virtual ~TextoPredictivo();
 
