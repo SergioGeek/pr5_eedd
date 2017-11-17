@@ -34,9 +34,6 @@ int main() {
     arbol.muestraAVL();
     std::cout << " ============================ " << std::endl;
 
-    std::cout << arbol.alturaH() << std::endl;
-
-    std::cout << arbol.numElementos() << std::endl;
 
 
 
@@ -44,10 +41,10 @@ int main() {
 
 
 
-    Diccionario d ( "/home/anonymous/Documents/eedd_practice/pr5_eedd/listado-sin-acentos_v2.txt" );
+    Diccionario d ( "/home/administrador/Escritorio/pr5_eedd/listado-sin-acentos_v2.txt" );
 
 
-    d.usacorpus( "/home/anonymous/Documents/eedd_practice/pr5_eedd/corpus_spanish.txt" );
+    d.usacorpus( "/home/administrador/Escritorio/pr5_eedd/corpus_spanish.txt" );
 
 
     TextoPredictivo tp ( d );
@@ -56,14 +53,15 @@ int main() {
 
     tp.entrena( frase );
 
-    std::string termino = "palabra";
+    std::string termino = "frase";
 
     auto lista = tp.sugerencia( termino );
 
     std::list < std::string >::iterator it = lista.begin();
 
-    for ( int i = 0; i < 3; ++i )
-        std::cout << *it << std::endl;
+    std::cout << "Palabra recomendada" << std::endl;
+
+    std::cout << *it << std::endl;
 
 
 
