@@ -29,7 +29,7 @@ private:
     void limpiaAVL ( Nodo < T >*& r );
     void rotDer ( Nodo < T >*& p );
     void rotIzq ( Nodo < T >*& p );
-    bool insertaDato( Nodo<T>*& o, T& dato, int& h, bool& sol, T*& r );
+    bool insertaDato( Nodo<T>*& o, T& dato, bool& sol, T*& r );
     void inorden ( Nodo < T >* r );
 
 
@@ -139,7 +139,7 @@ bool AVL < T >::insertar(  T& dato, T*& r) {
 
     bool sol = false;
     int h = 0;
-    if ( this->insertaDato ( this->raiz, dato, h, sol, r ) ) {
+    if ( this->insertaDato ( this->raiz, dato, sol, r ) ) {
 
         if ( this->altura < h )
             this->altura = h;
@@ -151,7 +151,7 @@ bool AVL < T >::insertar(  T& dato, T*& r) {
 }
 
 template < typename T >
-bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r ) {
+bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, bool& sol, T*& r ) {
 
     Nodo < T > *p = o;
 
@@ -162,11 +162,11 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r )
         o = p; sol= true;
 
     }else if ( dato > p->dato ){
-        ++h;
-        if (insertaDato( p->der, dato, h, sol, r ) ){
+
+        if (insertaDato( p->der, dato, sol, r ) ){
             p->bal--;
             if ( p->bal == -2 ) {
-                --h;
+
                 if ( p->der->bal == 1)
                     rotDer ( p->der );
                 rotIzq ( o );
@@ -174,11 +174,11 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r )
         }
     }
     else if ( dato < p->dato ){
-        ++h;
-        if ( insertaDato ( p->izq, dato, h, sol, r ) ){
+
+        if ( insertaDato ( p->izq, dato, sol, r ) ){
             p->bal++;
             if ( p->bal == 2 ){
-                --h;
+
                 if ( p->izq->bal == -1)
                     rotIzq ( p->izq );
                 rotDer ( o );
@@ -186,7 +186,7 @@ bool AVL < T >::insertaDato( Nodo < T >*& o, T& dato, int& h, bool& sol, T*& r )
         }
     } else if ( dato == p->dato)
         r = &p->dato;
-    ++h;
+
     return sol;
 }
 

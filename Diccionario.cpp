@@ -27,8 +27,6 @@ Diccionario::Diccionario( std::string ruta ) {
 
                 Palabra p ( linea );
                 this->hojas.insertar( p, pp );
-                //std::cout << *pp << std::endl;
-                //std::cout << "Nueva palabra" << std::endl;
             }
         }
 
@@ -115,7 +113,7 @@ void Diccionario::usacorpus ( const std::string &nom_fich_corpus ) {
         throw std::string ( "El archivo no se ha podido abrir correctamente" );
 
     }
-    //std::cout << "Fin de corpus" <<std::endl;
+    std::cout << "Fin de corpus" <<std::endl;
 
 }
 
@@ -123,7 +121,12 @@ std::list < std::string > Diccionario::sacaSucesoresDe(const std::string &p) {
 
     Palabra termino ( p );
 
-    return this->hojas.busca( termino )->sucesores();
+    Palabra* pp = this->hojas.busca( termino );
+
+    if ( !pp )
+        throw std::string ( "La palabra no tiene sucesores porque no está en el diccionario" );
+
+    return pp->sucesores();
 }
 
 void Diccionario::muestra() {
