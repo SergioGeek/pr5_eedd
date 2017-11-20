@@ -107,6 +107,7 @@ void AVL < T >::limpiaAVL ( Nodo < T >*& r ) {
 
 template < typename T >
 void AVL < T >::rotDer (Nodo < T >*& p){
+
     Nodo<T> *q = p, *l;
     p = l = q->izq;
     q->izq = l->der;
@@ -121,6 +122,7 @@ void AVL < T >::rotDer (Nodo < T >*& p){
 
 template < typename T >
 void AVL < T >::rotIzq ( Nodo < T >*& p){
+
     Nodo<T> *q = p, *r;
     p = r = q->der;
     q->der = r->izq;

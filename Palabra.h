@@ -3,7 +3,6 @@
 #define PR1_PALABRA_H
 
 #include <string>
-#include "ListaEnlazada.h"
 #include "Sucesor.h"
 #include <list>
 
