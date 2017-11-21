@@ -36,6 +36,13 @@ int main() {
         arbol.muestraAVL();
         std::cout << " ============================ " << std::endl;
 
+        //AVL<int> arb(arbol);
+
+        //AVL<int> arbole;
+
+        //arbole = arb;
+
+
 
 
 
